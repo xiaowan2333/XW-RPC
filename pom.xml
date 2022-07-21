@@ -21,6 +21,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.16</version>
         </dependency>
+<!--        nio网络通信支持-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.51.Final</version>
+        </dependency>
     </dependencies>
 
 </project>
