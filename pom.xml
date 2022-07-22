@@ -27,6 +27,17 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.51.Final</version>
         </dependency>
+<!--        多序列化方式支持-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.67</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+        </dependency>
     </dependencies>
 
 </project>
