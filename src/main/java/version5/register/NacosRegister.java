@@ -4,6 +4,8 @@ import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import version5.loadbalance.LoadBalance;
+import version5.loadbalance.RoundLoadBalance;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
 public class NacosRegister implements ServerRegister{
     private static final String SERVER_ADDRESS = "127.0.0.1:8848";
     private static final NamingService namingService;
+    //默认使用轮询
+    private  LoadBalance balance = new RoundLoadBalance();
     static {
         namingService = getNamingService();
         System.out.println("已连接到注册中心...");
@@ -26,6 +30,14 @@ public class NacosRegister implements ServerRegister{
             System.out.println("连接注册中心失败！"+e);
             throw new RuntimeException("连接注册中心失败！");
         }
+    }
+
+    public LoadBalance getBalance() {
+        return balance;
+    }
+
+    public void setBalance(LoadBalance balance) {
+        this.balance = balance;
     }
 
     @Override
@@ -48,9 +60,13 @@ public class NacosRegister implements ServerRegister{
             System.out.println("拉取服务列表失败");
             e.printStackTrace();
         }
-        System.out.println("testNoInstance"+allInstances);
-        //假装这里有个负载均衡，选择一个合适的socket地址传回去
-        if (!allInstances.isEmpty()){
+        //加入负载均衡
+        if (allInstances.isEmpty()){
+            //当可用服务>1时用负载均衡
+            if (allInstances.size()>1){
+                Instance balance = this.balance.balance(allInstances);
+
+            }
             //这里直接拿第一个实例，封装成socket
             Instance instance = allInstances.get(0);
             return new InetSocketAddress(instance.getIp(), instance.getPort());
